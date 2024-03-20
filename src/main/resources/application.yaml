@@ -9,7 +9,25 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+              allowedOrigins: "*"
+              allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              allowedHeaders:
+              - "*"
       routes:
+        - id: auth-service
+          uri: lb://AUTHENTIFICATION
+          predicates:
+            - Path=/api/v1/auth/**
+
         - id: property-management-service
           uri: lb://PROPERTY-MANAGEMENT-SERVICE
           predicates:
@@ -19,8 +37,17 @@ spring:
           uri: lb://SHOWCASE-SERVICE
           predicates:
             - Path=/api/v1/showcase/**
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace
+          openfeign: trace
+          webClient: trace
+
+

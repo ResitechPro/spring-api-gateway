@@ -1,6 +1,7 @@
 package com.resitechpro.config.filter;
 
 import com.resitechpro.domain.dto.request.ValidateTokenRequestDto;
+import com.resitechpro.exception.customexceptions.BadRequestException;
 import com.resitechpro.utils.Response;
 import com.resitechpro.utils.RouteValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +62,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                             )
                             .retrieve()
                             .onStatus(t -> {
-                                return t.equals(HttpStatus.UNAUTHORIZED) || t.equals(HttpStatus.FORBIDDEN) || t.equals(HttpStatus.INTERNAL_SERVER_ERROR);
-                            }, response -> Mono.error(new RuntimeException("Something went wrong")))
+                                return t.equals(HttpStatus.UNAUTHORIZED) || t.equals(HttpStatus.FORBIDDEN);
+                            }, response -> Mono.error(new BadRequestException("Access denied")))
                             .bodyToMono(Response.class).flatMap(response -> {
                                 if (Boolean.FALSE.equals( (boolean) response.getResult())) {
                                     return Mono.error(new RuntimeException("Invalid token"));

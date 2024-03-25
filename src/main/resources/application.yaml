@@ -32,6 +32,8 @@ spring:
           uri: lb://PROPERTY-MANAGEMENT-SERVICE
           predicates:
             - Path=/api/v1/pms/**
+          filters:
+            - AuthenticationFilter
 
         - id: showcase-service
           uri: lb://SHOWCASE-SERVICE

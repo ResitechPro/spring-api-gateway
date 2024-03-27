@@ -90,6 +90,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>spring-cloud-gateway</finalName>
 	</build>
 
 </project>
